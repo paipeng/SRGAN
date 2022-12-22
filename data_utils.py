@@ -7,7 +7,7 @@ from torchvision.transforms import Compose, RandomCrop, ToTensor, ToPILImage, Ce
 
 
 def is_image_file(filename):
-    return any(filename.endswith(extension) for extension in ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG'])
+    return any(filename.endswith(extension) for extension in ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG', '.bmp'])
 
 
 def calculate_valid_crop_size(crop_size, upscale_factor):
