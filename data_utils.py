@@ -24,7 +24,7 @@ def train_hr_transform(crop_size):
 def train_lr_transform(crop_size, upscale_factor):
     return Compose([
         ToPILImage(),
-        Resize(crop_size // upscale_factor, interpolation=Image.BICUBIC),
+        Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
         ToTensor()
     ])
 
@@ -90,7 +90,7 @@ class TestDatasetFromFolder(Dataset):
         lr_image = Image.open(self.lr_filenames[index])
         w, h = lr_image.size
         hr_image = Image.open(self.hr_filenames[index])
-        hr_scale = Resize((self.upscale_factor * h, self.upscale_factor * w), interpolation=Image.BICUBIC)
+        hr_scale = Resize((self.upscale_factor * h, self.upscale_factor * w), interpolation=InterpolationMode.BILINEAR)
         hr_restore_img = hr_scale(lr_image)
         return image_name, ToTensor()(lr_image), ToTensor()(hr_restore_img), ToTensor()(hr_image)
 
