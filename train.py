@@ -21,6 +21,8 @@ parser.add_argument('--upscale_factor', default=4, type=int, choices=[2, 4, 8],
                     help='super resolution upscale factor')
 parser.add_argument('--num_epochs', default=100, type=int, help='train epoch number')
 
+parser.add_argument('-d', '--traindir', metavar='D', type=str, required=True, help='train data pictures folder path')
+parser.add_argument('-t', '--testdir', metavar='T', type=str, required=True, help='validate data folder path')
 
 if __name__ == '__main__':
     opt = parser.parse_args()
@@ -29,8 +31,8 @@ if __name__ == '__main__':
     UPSCALE_FACTOR = opt.upscale_factor
     NUM_EPOCHS = opt.num_epochs
     
-    train_set = TrainDatasetFromFolder('data/DIV2K_train_HR', crop_size=CROP_SIZE, upscale_factor=UPSCALE_FACTOR)
-    val_set = ValDatasetFromFolder('data/DIV2K_valid_HR', upscale_factor=UPSCALE_FACTOR)
+    train_set = TrainDatasetFromFolder(opt.traindir, crop_size=CROP_SIZE, upscale_factor=UPSCALE_FACTOR)
+    val_set = ValDatasetFromFolder(opt.testdir, upscale_factor=UPSCALE_FACTOR)
     train_loader = DataLoader(dataset=train_set, num_workers=4, batch_size=64, shuffle=True)
     val_loader = DataLoader(dataset=val_set, num_workers=4, batch_size=1, shuffle=False)
     
