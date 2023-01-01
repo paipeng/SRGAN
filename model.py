@@ -5,8 +5,11 @@ from torch import nn
 
 class Generator(nn.Module):
     def __init__(self, scale_factor):
-        upsample_block_num = int(math.log(scale_factor, 2))
-
+        print(f'scale_factor: {scale_factor}')
+        if scale_factor !=0:
+            upsample_block_num = int(math.log(scale_factor, 2))
+        else:
+            upsample_block_num = 0
         super(Generator, self).__init__()
         self.block1 = nn.Sequential(
             nn.Conv2d(1, 64, kernel_size=9, padding=4),

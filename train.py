@@ -17,7 +17,7 @@ from model import Generator, Discriminator
 
 parser = argparse.ArgumentParser(description='Train Super Resolution Models')
 parser.add_argument('--crop_size', default=88, type=int, help='training images crop size')
-parser.add_argument('--upscale_factor', default=4, type=int, choices=[2, 4, 8],
+parser.add_argument('--upscale_factor', default=4, type=int, choices=[0, 2, 4, 8],
                     help='super resolution upscale factor')
 parser.add_argument('--num_epochs', default=100, type=int, help='train epoch number')
 

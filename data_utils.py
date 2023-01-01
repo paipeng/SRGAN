@@ -3,15 +3,17 @@ from os.path import join
 
 from PIL import Image
 from torch.utils.data.dataset import Dataset
-from torchvision.transforms import Compose, RandomCrop, ToTensor, ToPILImage, CenterCrop, Resize, InterpolationMode, Grayscale
+from torchvision.transforms import Compose, RandomCrop, ToTensor, ToPILImage, CenterCrop, Resize, InterpolationMode, Grayscale, GaussianBlur
 
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG', '.bmp'])
 
 
 def calculate_valid_crop_size(crop_size, upscale_factor):
-    return crop_size - (crop_size % upscale_factor)
-
+    if upscale_factor != 0:
+        return crop_size - (crop_size % upscale_factor)
+    else:
+        return crop_size
 
 def train_hr_transform(crop_size):
     return Compose([
@@ -23,7 +25,9 @@ def train_hr_transform(crop_size):
 def train_lr_transform(crop_size, upscale_factor):
     return Compose([
         ToPILImage(),
-        Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+        #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+        GaussianBlur(3),
+        Grayscale(num_output_channels=1),
         ToTensor()
     ])
 
@@ -64,7 +68,10 @@ class ValDatasetFromFolder(Dataset):
         hr_image = Image.open(self.image_filenames[index])
         w, h = hr_image.size
         crop_size = calculate_valid_crop_size(min(w, h), self.upscale_factor)
-        lr_scale = Resize(crop_size // self.upscale_factor, interpolation=InterpolationMode.BILINEAR)
+        if self.upscale_factor == 0:
+            lr_scale = Resize(crop_size, interpolation=InterpolationMode.BILINEAR)
+        else:
+            lr_scale = Resize(crop_size // self.upscale_factor, interpolation=InterpolationMode.BILINEAR)
         hr_scale = Resize(crop_size, interpolation=InterpolationMode.BILINEAR)
         hr_image = CenterCrop(crop_size)(hr_image)
         lr_image = lr_scale(hr_image)
