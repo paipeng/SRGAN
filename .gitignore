@@ -1,2 +1,9 @@
 data/ABC
 epochs1
+epochs
+test/SRF_2
+test/SRF_3
+test/SRF_4
+test/SRF_8
+training_results
+__pycache__
