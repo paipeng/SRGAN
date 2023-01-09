@@ -4,6 +4,7 @@ from os.path import join
 from PIL import Image
 from torch.utils.data.dataset import Dataset
 from torchvision.transforms import Compose, RandomCrop, ToTensor, ToPILImage, CenterCrop, Resize, InterpolationMode, Grayscale, GaussianBlur
+#import torchvision
 
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in ['.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG', '.bmp'])
@@ -26,8 +27,8 @@ def train_lr_transform(crop_size, upscale_factor):
     return Compose([
         ToPILImage(),
         #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
-        GaussianBlur(3),
-        Grayscale(num_output_channels=1),
+        GaussianBlur(5),
+        #Grayscale(num_output_channels=1),
         ToTensor()
     ])
 
@@ -52,6 +53,10 @@ class TrainDatasetFromFolder(Dataset):
     def __getitem__(self, index):
         hr_image = self.hr_transform(Image.open(self.image_filenames[index]))
         lr_image = self.lr_transform(hr_image)
+
+
+        #i = torchvision.transforms.ToPILImage()(lr_image)
+        #i.show()
         return lr_image, hr_image
 
     def __len__(self):
