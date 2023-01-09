@@ -55,6 +55,8 @@ if __name__ == '__main__':
     results = {'d_loss': [], 'g_loss': [], 'd_score': [], 'g_score': [], 'psnr': [], 'ssim': []}
     
     for epoch in range(1, NUM_EPOCHS + 1):
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         train_bar = tqdm(train_loader)
         running_results = {'batch_sizes': 0, 'd_loss': 0, 'g_loss': 0, 'd_score': 0, 'g_score': 0}
     
