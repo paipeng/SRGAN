@@ -9,6 +9,7 @@ import torchvision.utils as utils
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import torchvision
 
 import pytorch_ssim
 from data_utils import TrainDatasetFromFolder, ValDatasetFromFolder, display_transform
@@ -90,6 +91,13 @@ if __name__ == '__main__':
             fake_img = netG(z)
             fake_out = netD(fake_img).mean()
             ##
+            #print(real_img.shape)
+            #print(fake_img.shape)
+            #print(fake_out.shape)
+            #i = torchvision.transforms.ToPILImage()(fake_img[0])
+            #i.show()
+            #i2 = torchvision.transforms.ToPILImage()(z[0])
+            #i2.show()
             g_loss = generator_criterion(fake_out, fake_img, real_img)
             g_loss.backward()
             
