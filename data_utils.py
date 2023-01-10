@@ -16,21 +16,37 @@ def calculate_valid_crop_size(crop_size, upscale_factor):
     else:
         return crop_size
 
-def train_hr_transform(crop_size):
-    return Compose([
-        RandomCrop(crop_size),
-        ToTensor(),
-    ])
+def train_hr_transform(crop_size, gray=False):
+    if gray:
+        return Compose([
+            RandomCrop(crop_size),
+            Grayscale(num_output_channels=1),
+            ToTensor(),
+        ])
+    else:
+        return Compose([
+            RandomCrop(crop_size),
+            ToTensor(),
+        ])
 
 
-def train_lr_transform(crop_size, upscale_factor):
-    return Compose([
-        ToPILImage(),
-        #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
-        GaussianBlur(5),
-        #Grayscale(num_output_channels=1),
-        ToTensor()
-    ])
+def train_lr_transform(crop_size, upscale_factor, gray=False):
+    if gray:
+        return Compose([
+            ToPILImage(),
+            #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+            GaussianBlur(5),
+            Grayscale(num_output_channels=1),
+            ToTensor()
+        ])
+    else:
+        return Compose([
+            ToPILImage(),
+            #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+            GaussianBlur(5),
+            #Grayscale(num_output_channels=1),
+            ToTensor()
+        ])
 
 
 def display_transform():
@@ -43,12 +59,12 @@ def display_transform():
 
 
 class TrainDatasetFromFolder(Dataset):
-    def __init__(self, dataset_dir, crop_size, upscale_factor):
+    def __init__(self, dataset_dir, crop_size, upscale_factor, gray=False):
         super(TrainDatasetFromFolder, self).__init__()
         self.image_filenames = [join(dataset_dir, x) for x in listdir(dataset_dir) if is_image_file(x)]
         crop_size = calculate_valid_crop_size(crop_size, upscale_factor)
-        self.hr_transform = train_hr_transform(crop_size)
-        self.lr_transform = train_lr_transform(crop_size, upscale_factor)
+        self.hr_transform = train_hr_transform(crop_size, gray=gray)
+        self.lr_transform = train_lr_transform(crop_size, upscale_factor, gray=gray)
 
     def __getitem__(self, index):
         hr_image = self.hr_transform(Image.open(self.image_filenames[index]))
