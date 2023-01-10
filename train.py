@@ -45,6 +45,7 @@ if __name__ == '__main__':
     generator_criterion = GeneratorLoss()
     
     if torch.cuda.is_available():
+        os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:512'
         netG.cuda()
         netD.cuda()
         generator_criterion.cuda()
