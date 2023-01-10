@@ -64,4 +64,4 @@ with torch.no_grad():
     out_img = ToPILImage()(out[0].data.cpu())
     if opt.crop:
         out_img = add_margin(out_img, 140, 104, 140, 104, 255)
-    out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME)
+    out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME + '.bmp')
