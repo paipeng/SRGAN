@@ -4,7 +4,7 @@ import time
 import torch
 from PIL import Image
 from torch.autograd import Variable
-from torchvision.transforms import ToTensor, ToPILImage, InterpolationMode
+from torchvision.transforms import ToTensor, ToPILImage
 
 from model import Generator
 
@@ -30,7 +30,7 @@ else:
 print(f'input image name: {IMAGE_NAME}')
 image = Image.open(IMAGE_NAME)
 if opt.crop:
-    image = image.resize((640, 640), interpolation=InterpolationMode.BILINEAR)
+    image = image.resize((640, 640))
     new_width = 432
     new_height = 360
     width, height = image.size   # Get dimensions
