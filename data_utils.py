@@ -67,7 +67,11 @@ class TrainDatasetFromFolder(Dataset):
         self.lr_transform = train_lr_transform(crop_size, upscale_factor, gray=gray)
 
     def __getitem__(self, index):
-        hr_image = self.hr_transform(Image.open(self.image_filenames[index]))
+        image = Image.open(self.image_filenames[index])
+        if image.width == 1280:
+            newsize = (640, 640)
+            image = image.resize(newsize)
+        hr_image = self.hr_transform(image)
         lr_image = self.lr_transform(hr_image)
 
 
@@ -87,6 +91,10 @@ class ValDatasetFromFolder(Dataset):
 
     def __getitem__(self, index):
         hr_image = Image.open(self.image_filenames[index])
+        if hr_image.width == 1280:
+            newsize = (640, 640)
+            hr_image = hr_image.resize(newsize)
+            
         w, h = hr_image.size
         crop_size = calculate_valid_crop_size(min(w, h), self.upscale_factor)
         if self.upscale_factor == 0:
