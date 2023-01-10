@@ -34,8 +34,8 @@ if __name__ == '__main__':
     
     train_set = TrainDatasetFromFolder(opt.traindir, crop_size=CROP_SIZE, upscale_factor=UPSCALE_FACTOR, gray=opt.gray)
     val_set = ValDatasetFromFolder(opt.testdir, upscale_factor=UPSCALE_FACTOR)
-    train_loader = torch.utils.dataDataLoader(dataset=train_set, num_workers=4, batch_size=2, shuffle=True)
-    val_loader = torch.utils.dataDataLoader(dataset=val_set, num_workers=4, batch_size=1, shuffle=False)
+    train_loader = torch.utils.data.DataLoader(dataset=train_set, num_workers=4, batch_size=2, shuffle=True)
+    val_loader = torch.utils.data.DataLoader(dataset=val_set, num_workers=4, batch_size=1, shuffle=False)
     
     netG = Generator(UPSCALE_FACTOR)
     print('# generator parameters:', sum(param.numel() for param in netG.parameters()))
