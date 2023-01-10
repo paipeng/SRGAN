@@ -26,7 +26,7 @@ if TEST_MODE:
     model.load_state_dict(torch.load(MODEL_NAME))
 else:
     model.load_state_dict(torch.load(MODEL_NAME, map_location=lambda storage, loc: storage))
-
+print(f'input image name: {IMAGE_NAME}')
 image = Image.open(IMAGE_NAME)
 image = Variable(ToTensor()(image), volatile=True).unsqueeze(0)
 if TEST_MODE:
