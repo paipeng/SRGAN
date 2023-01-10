@@ -7,3 +7,7 @@ test/SRF_4
 test/SRF_8
 training_results
 __pycache__
+data/output
+data/S2iCode
+data/S2iCode180
+data/S2iCode180_Test
