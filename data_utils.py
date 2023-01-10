@@ -35,16 +35,17 @@ def train_lr_transform(crop_size, upscale_factor, gray=False):
         return Compose([
             ToPILImage(),
             #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+            Resize(crop_size, interpolation=InterpolationMode.BILINEAR),
             Grayscale(num_output_channels=1),
-            GaussianBlur(15),
+            GaussianBlur(5),
             ToTensor()
         ])
     else:
         return Compose([
             ToPILImage(),
             #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
+            Resize(crop_size, interpolation=InterpolationMode.BILINEAR),
             GaussianBlur(5),
-            #Grayscale(num_output_channels=1),
             ToTensor()
         ])
 
@@ -96,8 +97,10 @@ class ValDatasetFromFolder(Dataset):
             lr_scale = Resize(crop_size // self.upscale_factor, interpolation=InterpolationMode.BILINEAR)
         hr_scale = Resize(crop_size, interpolation=InterpolationMode.BILINEAR)
         hr_image = CenterCrop(crop_size)(hr_image)
-        lr_image = lr_scale(hr_image)
+        #lr_image = lr_scale(hr_image)
+        lr_image = GaussianBlur(5)(hr_image)
         hr_restore_img = hr_scale(lr_image)
+        hr_restore_img = hr_image
         return ToTensor()(lr_image), ToTensor()(hr_restore_img), ToTensor()(hr_image)
 
     def __len__(self):
