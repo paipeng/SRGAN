@@ -44,7 +44,7 @@ if opt.crop:
 
 
 with torch.no_grad():
-    image = Variable(ToTensor()(image), volatile=True).unsqueeze(0)
+    image = Variable(ToTensor()(image)).unsqueeze(0)
     if TEST_MODE:
         image = image.cuda()
 
