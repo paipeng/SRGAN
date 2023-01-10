@@ -21,6 +21,15 @@ TEST_MODE = True if opt.test_mode == 'GPU' else False
 IMAGE_NAME = opt.image_name
 MODEL_NAME = opt.model_name
 
+def add_margin(pil_img, top, right, bottom, left, color):
+    width, height = pil_img.size
+    new_width = width + right + left
+    new_height = height + top + bottom
+    result = Image.new(pil_img.mode, (new_width, new_height), color)
+    result.paste(pil_img, (left, top))
+    return result
+
+
 model = Generator(UPSCALE_FACTOR).eval()
 if TEST_MODE:
     model.cuda()
@@ -53,4 +62,6 @@ with torch.no_grad():
     elapsed = (time.process_time() - start)
     print('cost' + str(elapsed) + 's')
     out_img = ToPILImage()(out[0].data.cpu())
+    if opt.crop:
+        out_img = add_margin(out_img, 140, 104, 140, 104, 255)
     out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME)
