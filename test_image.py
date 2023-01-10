@@ -28,13 +28,15 @@ else:
     model.load_state_dict(torch.load(MODEL_NAME, map_location=lambda storage, loc: storage))
 print(f'input image name: {IMAGE_NAME}')
 image = Image.open(IMAGE_NAME)
-image = Variable(ToTensor()(image), volatile=True).unsqueeze(0)
-if TEST_MODE:
-    image = image.cuda()
 
-start = time.process_time()
-out = model(image)
-elapsed = (time.process_time() - start)
-print('cost' + str(elapsed) + 's')
-out_img = ToPILImage()(out[0].data.cpu())
-out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME)
+with torch.no_grad():
+    image = Variable(ToTensor()(image), volatile=True).unsqueeze(0)
+    if TEST_MODE:
+        image = image.cuda()
+
+    start = time.process_time()
+    out = model(image)
+    elapsed = (time.process_time() - start)
+    print('cost' + str(elapsed) + 's')
+    out_img = ToPILImage()(out[0].data.cpu())
+    out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME)
