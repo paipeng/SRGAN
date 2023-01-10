@@ -34,7 +34,7 @@ if __name__ == '__main__':
     NUM_EPOCHS = opt.num_epochs
     
     train_set = TrainDatasetFromFolder(opt.traindir, crop_size=CROP_SIZE, upscale_factor=UPSCALE_FACTOR, gray=opt.gray)
-    val_set = ValDatasetFromFolder(opt.testdir, upscale_factor=UPSCALE_FACTOR, gray=opt.gray)
+    val_set = ValDatasetFromFolder(opt.testdir, upscale_factor=UPSCALE_FACTOR)
     train_loader = DataLoader(dataset=train_set, num_workers=4, batch_size=2, shuffle=True)
     val_loader = DataLoader(dataset=val_set, num_workers=4, batch_size=1, shuffle=False)
     
