@@ -125,8 +125,7 @@ if __name__ == '__main__':
         if not os.path.exists(out_path):
             os.makedirs(out_path)
         
-        #if torch.cuda.is_available():
-        #    torch.cuda.empty_cache()
+        
         with torch.no_grad():
             val_bar = tqdm(val_loader)
             valing_results = {'mse': 0, 'ssims': 0, 'psnr': 0, 'ssim': 0, 'batch_sizes': 0}
@@ -137,6 +136,7 @@ if __name__ == '__main__':
                 lr = val_lr
                 hr = val_hr
                 if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
                     lr = lr.cuda()
                     hr = hr.cuda()
                 sr = netG(lr)
