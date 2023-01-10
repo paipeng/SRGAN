@@ -55,9 +55,7 @@ if __name__ == '__main__':
     
     results = {'d_loss': [], 'g_loss': [], 'd_score': [], 'g_score': [], 'psnr': [], 'ssim': []}
     
-    for epoch in range(1, NUM_EPOCHS + 1):
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+    for epoch in range(1, NUM_EPOCHS + 1):        
         train_bar = tqdm(train_loader)
         running_results = {'batch_sizes': 0, 'd_loss': 0, 'g_loss': 0, 'd_score': 0, 'g_score': 0}
     
@@ -127,6 +125,8 @@ if __name__ == '__main__':
         if not os.path.exists(out_path):
             os.makedirs(out_path)
         
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         with torch.no_grad():
             val_bar = tqdm(val_loader)
             valing_results = {'mse': 0, 'ssims': 0, 'psnr': 0, 'ssim': 0, 'batch_sizes': 0}
@@ -162,7 +162,8 @@ if __name__ == '__main__':
                 image = utils.make_grid(image, nrow=3, padding=5)
                 utils.save_image(image, out_path + 'epoch_%d_index_%d.png' % (epoch, index), padding=5)
                 index += 1
-    
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         # save model parameters
         # save loss\scores\psnr\ssim
         results['d_loss'].append(running_results['d_loss'] / running_results['batch_sizes'])
