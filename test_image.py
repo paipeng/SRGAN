@@ -53,7 +53,7 @@ if opt.crop:
     image = image.crop((left, top, right, bottom))
 
 if opt.gray:
-    if(len(image.shape)==3):
+    if(image.mode != 'L'):
         image = image.convert('L')
 
 with torch.no_grad():
