@@ -38,6 +38,8 @@ def train_lr_transform(crop_size, upscale_factor, gray=False):
             Resize(crop_size, interpolation=InterpolationMode.BILINEAR),
             Grayscale(num_output_channels=1),
             GaussianBlur(15),
+            GaussianBlur(15),
+            GaussianBlur(15),
             ToTensor()
         ])
     else:
@@ -45,6 +47,8 @@ def train_lr_transform(crop_size, upscale_factor, gray=False):
             ToPILImage(),
             #Resize(crop_size // upscale_factor, interpolation=InterpolationMode.BILINEAR),
             Resize(crop_size, interpolation=InterpolationMode.BILINEAR),
+            GaussianBlur(15),
+            GaussianBlur(15),
             GaussianBlur(15),
             ToTensor()
         ])
