@@ -21,6 +21,8 @@ UPSCALE_FACTOR = opt.upscale_factor
 TEST_MODE = True if opt.test_mode == 'GPU' else False
 IMAGE_NAME = opt.image_name
 MODEL_NAME = opt.model_name
+CROP_WIDTH = 452
+CROP_HEIGHT = 380
 
 def add_margin(pil_img, top, right, bottom, left, color):
     width, height = pil_img.size
@@ -41,8 +43,8 @@ print(f'input image name: {IMAGE_NAME}')
 image = Image.open(IMAGE_NAME)
 if opt.crop:
     image = image.resize((640, 640))
-    new_width = 432
-    new_height = 360
+    new_width = CROP_WIDTH
+    new_height = CROP_HEIGHT
     width, height = image.size   # Get dimensions
     left = (width - new_width)/2
     top = (height - new_height)/2
@@ -67,5 +69,7 @@ with torch.no_grad():
     print('cost: ' + str(elapsed) + ' s')
     out_img = ToPILImage()(out[0].data.cpu())
     if opt.crop:
-        out_img = add_margin(out_img, 140, 104, 140, 104, 255)
+        vd = int((640 -CROP_HEIGHT)/2)
+        hd = int((640 -CROP_WIDTH)/2)
+        out_img = add_margin(out_img, vd, hd, vd, hd, 255)
     out_img.save('out_srf_' + str(UPSCALE_FACTOR) + '_' + IMAGE_NAME + '.bmp')
