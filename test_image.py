@@ -64,7 +64,7 @@ with torch.no_grad():
     start = time.process_time()
     out = model(image)
     elapsed = (time.process_time() - start)
-    print('cost' + str(elapsed) + 's')
+    print('cost: ' + str(elapsed) + ' s')
     out_img = ToPILImage()(out[0].data.cpu())
     if opt.crop:
         out_img = add_margin(out_img, 140, 104, 140, 104, 255)
