@@ -14,6 +14,7 @@ parser.add_argument('--test_mode', default='CPU', type=str, choices=['GPU', 'CPU
 parser.add_argument('--image_name', type=str, required=True, help='test low resolution image name')
 parser.add_argument('--model_name', default='netG_epoch_2_100.pth', type=str, help='generator model epoch name')
 parser.add_argument('-c', '--crop', default=False, type=bool, help='crop image')
+parser.add_argument('-g', '--gray', default=False, type=bool, help='convert image to grayscale')
 opt = parser.parse_args()
 
 UPSCALE_FACTOR = opt.upscale_factor
@@ -51,6 +52,9 @@ if opt.crop:
     # Crop the center of the image
     image = image.crop((left, top, right, bottom))
 
+if opt.gray:
+    if(len(image.shape)==3):
+        image = image.convert('L')
 
 with torch.no_grad():
     image = Variable(ToTensor()(image)).unsqueeze(0)
