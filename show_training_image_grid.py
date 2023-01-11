@@ -33,7 +33,7 @@ def generate_grid(train_loader):
     #    X = X.to(device)
     #    torch_tensor.append(X)
     blur_images, targets = next(iter(train_loader))
-    grid_img = torchvision.utils.make_grid(targets)
+    grid_img = torchvision.utils.make_grid(targets, nrow=4, padding=10)
     #print(grid_img.shape)
     torchvision.utils.save_image(grid_img, 'filename.png')
 
@@ -42,19 +42,10 @@ def generate_grid(train_loader):
     #img.show()
     #show_image(grid_img)
 
-    grid_img = torchvision.utils.make_grid(blur_images)
+    grid_img = torchvision.utils.make_grid(blur_images, nrow=4, padding=10)
     #print(grid_img.shape)
     torchvision.utils.save_image(grid_img, 'filename_blur.png')
 
-
-def generate_grid_blur(train_loader):
-    inputs, targets = next(iter(train_loader))
-    grid_img = torchvision.utils.make_grid(targets)
-    #print(grid_img.shape)
-    torchvision.utils.save_image(grid_img, 'filename_blur.png')
-
-    #img = torchvision.transforms.ToPILImage()(grid_img)
-    #img.show()
 
 
 parser = argparse.ArgumentParser(description='Train Super Resolution Models')
@@ -70,4 +61,3 @@ if __name__ == '__main__':
     train_loader = torch.utils.data.DataLoader(dataset=train_set, num_workers=1, batch_size=32, shuffle=True)
     
     generate_grid(train_loader=train_loader)
-    #generate_grid_blur(train_loader=train_loader)
