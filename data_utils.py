@@ -102,8 +102,13 @@ class ValDatasetFromFolder(Dataset):
         hr_scale = Resize(crop_size, interpolation=InterpolationMode.BILINEAR)
         hr_image = CenterCrop(crop_size)(hr_image)
         #lr_image = lr_scale(hr_image)
-        lr_image = GaussianBlur(5)(hr_image)
-        hr_restore_img = hr_scale(lr_image)
+        
+        lr_image = CenterCrop(crop_size)(hr_image)
+        lr_image = GaussianBlur(15)(lr_image)
+        lr_image = GaussianBlur(15)(lr_image)
+        lr_image = GaussianBlur(15)(lr_image)
+
+        #hr_restore_img = hr_scale(lr_image)
         hr_restore_img = hr_image
         return ToTensor()(lr_image), ToTensor()(hr_restore_img), ToTensor()(hr_image)
 
