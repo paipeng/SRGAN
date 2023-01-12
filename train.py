@@ -42,7 +42,7 @@ if __name__ == '__main__':
     netD = Discriminator()
     print('# discriminator parameters:', sum(param.numel() for param in netD.parameters()))
     
-    generator_criterion = GeneratorLoss(opt.gray)
+    generator_criterion = GeneratorLoss()
     
     if torch.cuda.is_available():
         os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:512'

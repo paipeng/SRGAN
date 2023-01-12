@@ -4,12 +4,10 @@ from torchvision.models.vgg import vgg16
 import VGG
 
 class GeneratorLoss(nn.Module):
-    def __init__(self, gray=False):
+    def __init__(self):
         super(GeneratorLoss, self).__init__()
-        if gray == True:
-            vgg = VGG.vgg19_bn(True)
-        else:
-            vgg = vgg16(pretrained=True)
+        #vgg = vgg16(pretrained=True)
+        vgg = VGG.vgg19_bn(True)
         #vgg = model.features
         loss_network = nn.Sequential(*list(vgg.features)[:31]).eval()
         for param in loss_network.parameters():
