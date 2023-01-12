@@ -12,6 +12,8 @@ import torchvision
 from torchvision.transforms import ToTensor, ToPILImage, CenterCrop
 
 from PIL import Image
+import matplotlib.pyplot as plt
+
 import pytorch_ssim
 from data_utils import TrainDatasetFromFolder, ValDatasetFromFolder, display_transform
 from loss import GeneratorLoss
@@ -46,6 +48,29 @@ def load_image(image_path, crop_size):
         image = image.cuda()
     return image
 
+def show_images(input_image, reference_image, d_loss, output):
+    i = torchvision.transforms.ToPILImage()(input_image[0])
+    r = torchvision.transforms.ToPILImage()(reference_image[0])
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    ax1.imshow(i, cmap='gray')
+    ax1.set_title('input image')
+    #hide x-axis
+    ax1.get_xaxis().set_visible(False)
+    #hide y-axis 
+    ax1.get_yaxis().set_visible(False)
+    ax2.imshow(r, cmap='gray')
+    ax2.set_title(f'Discriminator dloss: {d_loss}')
+    
+    ax2.get_xaxis().set_visible(False)
+    ax2.get_yaxis().set_visible(False)
+
+    plt.axis('off')
+    plt.show()
+    extent = ax2.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    print(f'save figure to {output}')
+    fig.savefig(output)
+
 if __name__ == '__main__':
     opt = parser.parse_args()
     print(f'input image name: {opt.input}')
@@ -69,11 +94,15 @@ if __name__ == '__main__':
 
 
     #netD.zero_grad()
-    real_out = netD(reference_image).mean()
-    fake_out = netD(input_image).mean()
+    real_out = netD(input_image).mean()
+    print(real_out.item())
+    fake_out = netD(reference_image).mean()
+    print(fake_out)
     d_loss = 1 - real_out + fake_out
-    d_loss.backward(retain_graph=True)
+    #d_loss.backward(retain_graph=True)
     #optimizerD.step()
     print(d_loss.item())
+
+    show_images(input_image, reference_image, d_loss.item(), 'authori.png')
         
     
