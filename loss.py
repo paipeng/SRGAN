@@ -7,7 +7,7 @@ class GeneratorLoss(nn.Module):
     def __init__(self, gray=False):
         super(GeneratorLoss, self).__init__()
         if gray == True:
-            vgg = VGG.vgg19_bn(True)
+            vgg = VGG.vgg16_bn(True)
         else:
             vgg = vgg16(pretrained=True)
         #vgg = model.features
